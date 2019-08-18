@@ -4,7 +4,19 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.DateStr</h2>
+
+
+<form asp-action="Index">
+    <input type="hidden" value="@ViewBag.Date" name="date"/>
+    <input type="hidden" value="-1" name="add" />
+    <input type="submit" value="前月" />
+</form>
+<form asp-action="Index">
+    <input type="hidden" value="@ViewBag.Date" name="date" />
+    <input type="hidden" value="1" name="add" />
+    <input type="submit" value="次月" />
+</form>
 
 <p>
     <a asp-action="Create">Create New</a>

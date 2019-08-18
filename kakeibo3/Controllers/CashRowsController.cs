@@ -19,10 +19,10 @@ namespace kakeibo3.Controllers
         }
 
         // GET: CashRows
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.CashRow.ToListAsync());
-        }
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View(await _context.CashRow.ToListAsync());
+        //}
 
         // GET: CashRows/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -148,5 +148,65 @@ namespace kakeibo3.Controllers
         {
             return _context.CashRow.Any(e => e.ID == id);
         }
+
+
+
+
+
+
+
+
+        public async Task<IActionResult> Index()
+        {
+            var cashrows = from c in _context.CashRow select c;
+            cashrows = cashrows.Where(c => c.PayDate.Year == DateTime.Now.Year && c.PayDate.Month == DateTime.Now.Month);
+            cashrows = cashrows.OrderBy(m => m.PayDate);
+            ViewBag.Date = DateTime.Now;
+            ViewBag.DateStr = $"{DateTime.Now.Year}年{DateTime.Now.Month}月";
+
+            return View(await cashrows.ToListAsync());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(DateTime date,int add)
+        {
+            date = date.AddMonths(add);
+            var cashrows = from c in _context.CashRow select c;
+            cashrows = cashrows.Where(c => c.PayDate.Year == date.Year && c.PayDate.Month == date.Month);
+            cashrows = cashrows.OrderBy(m => m.PayDate);
+            ViewBag.Date = date;
+            ViewBag.DateStr = $"{date.Year}年{date.Month}月";
+
+            return View(await cashrows.ToListAsync());
+        }
+
+
+
+
+        public async Task<IActionResult> Calculate()
+        {
+            var cashrows = from c in _context.CashRow select c;
+            cashrows = cashrows.Where(c => c.PayDate.Year == DateTime.Now.Year && c.PayDate.Month == DateTime.Now.Month);
+            cashrows = cashrows.OrderBy(m => m.PayDate);
+            ViewBag.Date = DateTime.Now;
+            ViewBag.DateStr = $"{DateTime.Now.Year}年{DateTime.Now.Month}月";
+
+            return View(await cashrows.ToListAsync());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Calculate(DateTime date,int add)
+        {
+            date = date.AddMonths(add);
+            var cashrows = from c in _context.CashRow select c;
+            cashrows = cashrows.Where(c => c.PayDate.Year == date.Year && c.PayDate.Month == date.Month);
+            cashrows = cashrows.OrderBy(m => m.PayDate);
+            ViewBag.Date = date;
+            ViewBag.DateStr = $"{date.Year}年{date.Month}月";
+
+            return View(await cashrows.ToListAsync());
+        }
+
+
     }
 }

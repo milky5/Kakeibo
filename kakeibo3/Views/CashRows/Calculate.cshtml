@@ -1,0 +1,103 @@
+﻿@model IEnumerable<kakeibo3.Models.CashRow>
+@{
+    ViewData["Title"] = "Calculate";
+}
+
+<h2>@ViewBag.DateStr</h2>
+
+
+<form asp-action="Calculate">
+    <input type="hidden" value="@ViewBag.Date" name="date" />
+    <input type="hidden" value="-1" name="add" />
+    <input type="submit" value="前月" />
+</form>
+<form asp-action="Calculate">
+    <input type="hidden" value="@ViewBag.Date" name="date" />
+    <input type="hidden" value="1" name="add" />
+    <input type="submit" value="次月" />
+</form>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>合計</th>
+            <th>ゆうや</th>
+            <th>あんじゅ</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>総支出</td>
+            <td>@Model.Sum(m => m.Price).ToString()</td>
+            <td>@Model.Where(m => m.PayerStr == PayerEnum.Yuya.ToString()).Sum(m => m.Price).ToString()</td>
+            <td>@Model.Where(m => m.PayerStr == PayerEnum.Anju.ToString()).Sum(m => m.Price).ToString()</td>
+        </tr>
+        <tr>
+            <td>食費</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Food.ToString()).Sum(m => m.Price).ToString()</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Food.ToString() && m.PayerStr == PayerEnum.Yuya.ToString()).Sum(m => m.Price).ToString()</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Food.ToString() && m.PayerStr == PayerEnum.Anju.ToString()).Sum(m => m.Price).ToString()</td>
+        </tr>
+        <tr>
+            <td>日用品</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.DailyItem.ToString()).Sum(m => m.Price).ToString()</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.DailyItem.ToString() && m.PayerStr == PayerEnum.Yuya.ToString()).Sum(m => m.Price).ToString()</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.DailyItem.ToString() && m.PayerStr == PayerEnum.Anju.ToString()).Sum(m => m.Price).ToString()</td>
+        </tr>
+        <tr>
+            <td>電気</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Electlic.ToString()).Sum(m => m.Price).ToString()</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Electlic.ToString() && m.PayerStr == PayerEnum.Yuya.ToString()).Sum(m => m.Price).ToString()</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Electlic.ToString() && m.PayerStr == PayerEnum.Anju.ToString()).Sum(m => m.Price).ToString()</td>
+        </tr>
+        <tr>
+            <td>ガス</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Gas.ToString()).Sum(m => m.Price).ToString()</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Gas.ToString() && m.PayerStr == PayerEnum.Yuya.ToString()).Sum(m => m.Price).ToString()</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Gas.ToString() && m.PayerStr == PayerEnum.Anju.ToString()).Sum(m => m.Price).ToString()</td>
+        </tr>
+        <tr>
+            <td>水道</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Water.ToString()).Sum(m => m.Price).ToString()</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Water.ToString() && m.PayerStr == PayerEnum.Yuya.ToString()).Sum(m => m.Price).ToString()</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Water.ToString() && m.PayerStr == PayerEnum.Anju.ToString()).Sum(m => m.Price).ToString()</td>
+        </tr>
+        <tr>
+            <td>家賃</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Home.ToString()).Sum(m => m.Price).ToString()</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Home.ToString() && m.PayerStr == PayerEnum.Yuya.ToString()).Sum(m => m.Price).ToString()</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Home.ToString() && m.PayerStr == PayerEnum.Anju.ToString()).Sum(m => m.Price).ToString()</td>
+        </tr>
+        <tr>
+            <td>通信費</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Network.ToString()).Sum(m => m.Price).ToString()</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Network.ToString() && m.PayerStr == PayerEnum.Yuya.ToString()).Sum(m => m.Price).ToString()</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Network.ToString() && m.PayerStr == PayerEnum.Anju.ToString()).Sum(m => m.Price).ToString()</td>
+        </tr>
+        <tr>
+            <td>その他</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Other.ToString()).Sum(m => m.Price).ToString()</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Other.ToString() && m.PayerStr == PayerEnum.Yuya.ToString()).Sum(m => m.Price).ToString()</td>
+            <td>@Model.Where(m => m.CostTypeStr == CostTypeEnum.Other.ToString() && m.PayerStr == PayerEnum.Anju.ToString()).Sum(m => m.Price).ToString()</td>
+        </tr>
+        <tr>
+            <td>貯金額</td>
+            @{
+                int totalSaving = 232000 - Model.Sum(m => m.Price);
+                <td>@totalSaving.ToString()</td>
+                int yuyaSaving = 127000 - Model.Where(m => m.PayerStr == PayerEnum.Yuya.ToString()).Sum(m => m.Price);
+                <td>@yuyaSaving.ToString()</td>
+                int anjuSaving = 105000 - Model.Where(m => m.PayerStr == PayerEnum.Anju.ToString()).Sum(m => m.Price);
+                <td>@anjuSaving.ToString()</td>
+            }
+        </tr>
+    </tbody>
+</table>
+
+
+@{
+    // 私がゆうやに　貯金額と家賃通信費渡せばいい。貯金額は確定なので、残りが家賃通信費って話
+
+}
